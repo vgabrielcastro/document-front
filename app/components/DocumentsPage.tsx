@@ -7,24 +7,24 @@ import type { Document } from "@/types/document";
 const INITIAL_DOCUMENTS: Document[] = [
   {
     id: "1",
-    titulo: "Contrato A",
+    title: "Contrato A",
     description: "Contrato de prestação de serviços",
     status: "Pending",
-    criadoEm: "2025-03-01",
+    created_at: "2025-03-01",
   },
   {
     id: "2",
-    titulo: "Relatório B",
+    title: "Relatório B",
     description: "Relatório trimestral de atividades",
     status: "Pending",
-    criadoEm: "2025-03-02",
+    created_at: "2025-03-02",
   },
   {
     id: "3",
-    titulo: "Proposta C",
+    title: "Proposta C",
     description: "Proposta comercial para novo cliente",
     status: "Signed",
-    criadoEm: "2025-03-03",
+    created_at: "2025-03-03",
   },
 ];
 
@@ -38,96 +38,87 @@ export default function DocumentsPage() {
     if (!newTitle.trim()) return;
     const newDocument: Document = {
       id: crypto.randomUUID(),
-      titulo: newTitle.trim(),
+      title: newTitle.trim(),
       description: newDescription.trim(),
       status: "Pending",
-      criadoEm: new Date().toISOString().slice(0, 10),
+      created_at: new Date().toISOString().slice(0, 10),
     };
     setDocuments([newDocument, ...documents]);
     setNewTitle("");
     setNewDescription("");
   }
 
+  const inputClass =
+    "w-full rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-400";
+  const btnClass =
+    "rounded bg-zinc-800 dark:bg-zinc-200 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 hover:opacity-90";
+
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 font-sans">
-      <div className="mx-auto max-w-2xl space-y-8">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 py-8 px-4 sm:px-6">
+      <div className="mx-auto max-w-xl space-y-6">
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
           Documentos
         </h1>
 
-        <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-          <h2 className="mb-3 text-lg font-medium text-zinc-800 dark:text-zinc-200">
+        <section className="rounded border border-zinc-200 dark:border-zinc-800 p-4">
+          <h2 className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Novo documento
           </h2>
-          <form onSubmit={createDocument} className="flex flex-col gap-2">
+          <form onSubmit={createDocument} className="flex flex-col gap-3">
             <input
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Título do documento"
-              className="rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+              placeholder="Título"
+              className={inputClass}
             />
             <input
               type="text"
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Descrição do documento"
-              className="rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+              placeholder="Descrição"
+              className={inputClass}
             />
-            <button
-              type="submit"
-              className="rounded bg-zinc-900 dark:bg-zinc-100 px-4 py-2 font-medium text-white dark:text-zinc-900 hover:opacity-90"
-            >
+            <button type="submit" className={btnClass}>
               Criar
             </button>
           </form>
         </section>
 
-        <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-          <h2 className="mb-3 text-lg font-medium text-zinc-800 dark:text-zinc-200">
+        <section className="rounded border border-zinc-200 dark:border-zinc-800 p-4">
+          <h2 className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Lista de documentos
           </h2>
-          <ul className="space-y-3">
+          <ul className="space-y-2 divide-y divide-zinc-100 dark:divide-zinc-800">
             {documents.length === 0 ? (
-              <li className="rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 py-8 text-center text-zinc-500 dark:text-zinc-400">
+              <li className="py-6 text-center text-sm text-zinc-500">
                 Nenhum documento cadastrado.
               </li>
             ) : (
               documents.map((doc) => (
-                <li
-                  key={doc.id}
-                  className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 p-4 space-y-3"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                        Título
+                <li key={doc.id} className="py-3 first:pt-0">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                        {doc.title}
                       </p>
-                      <p className="mt-0.5 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                        {doc.titulo}
+                      <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">
+                        {doc.description}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {doc.created_at}
                       </p>
                     </div>
                     <span
-                      className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
                         doc.status === "Signed"
-                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
-                          : "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
+                          ? "bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-100"
+                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300"
                       }`}
                     >
                       {doc.status}
                     </span>
                   </div>
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                      Descrição
-                    </p>
-                    <p className="mt-0.5 text-sm text-zinc-700 dark:text-zinc-300">
-                      {doc.description}
-                    </p>
-                  </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Criado em {doc.criadoEm}
-                  </p>
                 </li>
               ))
             )}
