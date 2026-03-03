@@ -12,12 +12,24 @@ function formatDate(iso: string) {
 
 function DocumentItem({
   doc,
+  onSigned,
   onDelete,
 }: {
   doc: Document;
+  onSigned: (id: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }) {
+  const [signing, setSigning] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  async function handleSign() {
+    setSigning(true);
+    try {
+      await onSigned(doc.id);
+    } finally {
+      setSigning(false);
+    }
+  }
 
   async function handleDelete() {
     if (!confirm("Excluir este documento?")) return;
@@ -52,6 +64,16 @@ function DocumentItem({
         >
           {doc.status}
         </span>
+        {doc.status === "pending" && (
+          <button
+            type="button"
+            onClick={handleSign}
+            disabled={signing}
+            className="text-xs text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 disabled:opacity-50"
+          >
+            {signing ? "..." : "Assinar"}
+          </button>
+        )}
         <button
           type="button"
           onClick={handleDelete}
@@ -66,7 +88,9 @@ function DocumentItem({
 }
 
 export default function DocumentsPage() {
-  const { documents, loading, error, create, remove } = useDocuments();
+  const { documents, loading, error, create, update, remove } = useDocuments();
+
+  const sign = (id: string) => update(id, { status: "signed" });
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -147,7 +171,12 @@ export default function DocumentsPage() {
               </li>
             ) : (
               documents.map((doc) => (
-                <DocumentItem key={doc.id} doc={doc} onDelete={remove} />
+                <DocumentItem
+                  key={doc.id}
+                  doc={doc}
+                  onSigned={sign}
+                  onDelete={remove}
+                />
               ))
             )}
           </ul>

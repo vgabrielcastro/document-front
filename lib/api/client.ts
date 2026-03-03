@@ -36,9 +36,9 @@ export const api = {
       body: JSON.stringify(body),
     }).then(handleResponse<T>),
 
-  put: <T>(path: string, body: unknown) =>
+  patch: <T>(path: string, body: unknown) =>
     fetch(`${config.apiUrl}${path}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     }).then(handleResponse<T>),

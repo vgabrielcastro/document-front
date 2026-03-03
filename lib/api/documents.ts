@@ -12,6 +12,6 @@ export const documentsApi = {
   getById: (id: string) => api.get<Document>(`${BASE}/${id}`),
   create: (input: CreateDocumentInput) => api.post<Document>(BASE, input),
   update: (id: string, input: UpdateDocumentInput) =>
-    api.put<Document>(`${BASE}/${id}`, input),
+    api.patch<Document>(`${BASE}/${id}`, input),
   delete: (id: string) => api.delete(`${BASE}/${id}`),
 };
